@@ -1,146 +1,118 @@
-# 🧠 Adobe Hackathon: Connecting the Dots - Round 1 Solution
+# 🧠 Adobe Hackathon: Connecting the Dots — Round 1 Solution
 
-This repository contains the **complete solution** for **Round 1** of the Adobe *Connecting the Dots* Hackathon, covering:
+This repository contains the **complete, containerized** solution for **Round 1** of the Adobe Connecting the Dots Hackathon, covering:
 
-* ✅ **Challenge 1A**: Document Outline Extraction
-* ✅ **Challenge 1B**: Persona-Driven Document Intelligence
-
----
+✅ **Challenge 1A**: Document Outline Extraction  
+✅ **Challenge 1B**: Persona-Driven Document Intelligence  
 
 ## 📘 Overview
 
-This project is built as a **comprehensive two-stage document analysis pipeline**:
+A two-stage, offline-ready document analysis pipeline optimized for CPU-only environments:
 
-### 🔹 Stage 1: Document Outline Extraction (Challenge 1A)
+1. **Stage 1: Document Outline Extraction (Challenge 1A)**  
+   Parses any PDF to extract:
+   - **Title**  
+   - **Hierarchical outline** of headings (H1–H4) with page numbers  
 
-Parses a PDF document and extracts:
+2. **Stage 2: Persona-Driven Intelligence (Challenge 1B)**  
+   Builds on Stage 1 using a lightweight Retrieval-Augmented Generation (RAG) pipeline to:
+   - Extract the **most relevant document sections** based on a user persona and job-to-be-done (JBTD)  
+   - Return a **ranked list** of insights  
 
-* The **title**
-* A **hierarchical outline** of headings (H1–H4) with corresponding page numbers.
-
-### 🔹 Stage 2: Persona-Driven Intelligence (Challenge 1B)
-
-Builds on 1A to analyze multiple documents using:
-
-* A **lightweight Retrieval-Augmented Generation (RAG)** pipeline
-* Extracts the **most relevant document sections** based on a user’s persona and job-to-be-done (JBTD)
-
-> ✅ The solution is **fully containerized** using Docker, optimized for **CPU-only**, **offline** execution, and adheres to all hackathon constraints.
-
----
+> **Fully containerized** with Docker, adheres to offline constraints, and requires minimal setup.
 
 ## 🚀 Challenge 1A: Document Outline Extraction
 
 ### 📌 Problem Statement
 
-Create a system that:
-
-* Accepts **any PDF**
-* Outputs a **structured outline** with:
-
-  * Title
-  * Headings (H1, H2, H3, etc.)
-  * Page numbers
+Create a system to:
+- Accept **any PDF**  
+- Output a **structured outline** including title, headings (H1–H4), and page numbers  
 
 ### 🛠️ Approach: Multi-Pass, Feature-Driven Pipeline
 
-1. **Logical Block Parsing**
-   Parses full text blocks instead of fragmented lines (handles multi-line headings properly).
-
-2. **Role-Based Filtering**
-   Ignores:
-
-   * Repeating headers/footers
-   * Bulleted lists
-   * Table contents
-
-3. **Context-Aware Feature Scoring**
-
-   * **Whitespace Analysis**: Uses vertical spacing to separate sections.
-   * **Typographical Prominence**: Font size, bold, all-caps.
-   * **Structural Cues**: Extra weight for numbered headings (e.g., `1.1 Introduction`) or keywords (`Appendix`).
-
-4. **Adaptive Thresholding**
-   Learns layout of each document to dynamically score headings.
-
-5. **Hierarchical Classification**
-   Assigns H1–H4 levels using font size clusters and numbering patterns.
-
----
+1. **Logical Block Parsing**  
+   Groups text into logical blocks to handle multi-line headings  
+2. **Role-Based Filtering**  
+   Excludes headers/footers, bulleted lists, and table contents  
+3. **Context-Aware Feature Scoring**  
+   - **Whitespace Analysis**: Uses vertical gaps  
+   - **Typographical Prominence**: Font size, weight, caps  
+   - **Structural Cues**: Numbered headings, keywords (e.g., “Appendix”)  
+4. **Adaptive Thresholding**  
+   Learns each document’s layout to set dynamic scores  
+5. **Hierarchical Classification**  
+   Clusters font sizes and patterns to assign H1–H4 levels  
 
 ## 🧠 Challenge 1B: Persona-Driven Document Intelligence
 
 ### 📌 Problem Statement
 
 Given:
-
-* A **user persona**
-* A **job-to-be-done (JBTD)**
-* A collection of **PDFs**
+- A **user persona**  
+- A **job-to-be-done (JBTD)**  
+- A collection of **PDFs**  
 
 Build a system to:
+- Retrieve the **most relevant document sections**  
+- Present a **ranked list** of insights  
 
-* Extract the **most relevant document sections**
-* Present a **ranked list** of insights
+### 🛠️ Approach: Lightweight Offline RAG
 
-### 🛠️ Approach: Lightweight Offline RAG Architecture
-
-1. **Preprocessing & Semantic Chunking**
-   Parses PDFs into logical chunks (heading + content).
-
-2. **Vector Store Construction**
-
-   * Converts each chunk into embeddings using `all-MiniLM-L6-v2`
-   * Stores in an efficient **vector store**
-
-3. **Persona-Augmented Retrieval**
-
-   * Embeds the user's query (persona + JBTD)
-   * Uses **cosine similarity** to retrieve Top-K relevant chunks
-
-4. **Sentence-Level Refinement**
-
-   * Breaks down chunks into sentences
-   * Reranks by relevance to filter noise
-
-5. **Reconstruction & Final Ranking**
-
-   * Groups top-ranked sentences back into coherent passages
-   * Scores and returns top 5 most relevant results
-
----
+1. **Preprocessing & Semantic Chunking**  
+   Splits PDFs into logical (heading + content) chunks  
+2. **Vector Store Construction**  
+   - Embeds chunks with `all-MiniLM-L6-v2`  
+   - Stores in an efficient vector database  
+3. **Persona-Augmented Retrieval**  
+   - Embeds persona + JBTD query  
+   - Retrieves Top-K chunks via cosine similarity  
+4. **Sentence-Level Refinement**  
+   Splits chunks into sentences and reranks by relevance  
+5. **Reconstruction & Final Ranking**  
+   Groups top sentences into coherent passages and returns top 5 insights  
 
 ## 📁 Project Structure
 
-```
-├── input/
-│   ├── doc1.pdf
-│   ├── doc2.pdf
-│   └── input.json         # Persona & task definition for 1B
-├── output/
-│   └── result.json        # Final result for 1B
-├── pdf_parser.py          # Core parsing logic (Challenge 1A)
-├── download_model.py      # Pre-downloads the sentence-transformer model
-├── run_1b.py              # Main script for persona-driven analysis (1B)
-├── requirements.txt       # Python dependencies
-└── Dockerfile             # Docker container definition
+```text
+├── Challenge_1a/
+│   ├── sample_dataset/
+│   │   ├── outputs/
+│   │   └── schema/
+│   ├── Dockerfile
+│   ├── process_pdfs.py
+│   ├── README.md
+│   └── requirements.txt
+├── Challenge_1b/
+│   ├── input/
+│   │   ├── PDFs/
+│   │   └── input.json
+│   ├── output/
+│   │   ├── challenge1b_output.json
+│   │   └── result.json
+│   ├── Dockerfile
+│   ├── download_model.py
+│   ├── pdf_parser.py
+│   ├── run_1b.py
+│   └── requirements.txt
+├── README.md
+├── pdf_parser.py
+├── download_model.py
+├── run_1b.py
+├── requirements.txt
+└── Dockerfile
 ```
 
----
-
-## ⚙️ How to Build and Run
+## ⚙️ How to Build & Run
 
 ### 🔧 Prerequisites
 
-* [Docker](https://www.docker.com/) installed and running
-
----
+- Docker installed and running  
 
 ### ✅ Step 1: Prepare Input
 
-Place your PDF files into the `input/` directory.
-
-Create an `input.json` file in the following format:
+1. Place your PDF files into `Challenge_1a/sample_dataset/` for Stage 1.  
+2. Copy outputs to `input/PDFs/` and edit `input/input.json` for Stage 2:  
 
 ```json
 {
@@ -148,67 +120,55 @@ Create an `input.json` file in the following format:
     { "filename": "doc1.pdf" },
     { "filename": "doc2.pdf" }
   ],
-  "persona": {
-    "role": "Travel Planner"
-  },
-  "job_to_be_done": {
-    "task": "Plan a trip of 4 days for a group of 10 college friends."
-  }
+  "persona": { "role": "Travel Planner" },
+  "job_to_be_done": { "task": "Plan a 4-day trip for 10 college friends." }
 }
 ```
 
----
-
 ### 🧱 Step 2: Build the Docker Image
-
-In the root of the project, run:
 
 ```bash
 docker build -t adobe-hackathon-solution .
 ```
 
-> ⚠️ First-time build may take a few minutes to download dependencies and models.
-
----
+> ⚠️ First build may take several minutes to download dependencies and models.
 
 ### 🏃 Step 3: Run the Container
 
 ```bash
 docker run --rm \
-  -v "$(pwd)/input:/app/input" \
-  -v "$(pwd)/output:/app/output" \
+  -v "$(pwd)/Challenge_1a/sample_dataset:/app/input" \
+  -v "$(pwd)/Challenge_1b/output:/app/output" \
   adobe-hackathon-solution
 ```
 
----
+### 📤 Step 4: View Outputs
 
-### 📤 Step 4: View the Output
+- **Stage 1**: `Challenge_1a/sample_dataset/outputs/`  
+- **Stage 2**: `Challenge_1b/output/result.json`  
 
-The final results will be saved as:
+## 📦 Dependencies
 
-```
-output/result.json
-```
+All Python packages are listed in `requirements.txt`, including:
 
----
-
-## 📦 Requirements
-
-All dependencies are listed in `requirements.txt` and include:
-
-* `PyMuPDF`
-* `sentence-transformers`
-* `scikit-learn`
-* `numpy`
-* `torch`
-* `transformers`
-* ...and others required for parsing and similarity scoring.
-
----
+- `PyMuPDF`  
+- `sentence-transformers`  
+- `scikit-learn`  
+- `numpy`  
+- `torch`  
+- `transformers`  
 
 ## 👥 Authors & Credits
 
-Gunottam Maini
-Ridhima Kathait
-Abhinav Chand Ramola
+- **Gunottam Maini**  
+- **Ridhima Kathait**  
+- **Abhinav Chand Ramola**  
 
+## 🏷️ Topics
+
+- Document Analysis  
+- PDF Parsing  
+- Retrieval-Augmented Generation (RAG)  
+- Docker  
+- NLP  
+- Offline AI  

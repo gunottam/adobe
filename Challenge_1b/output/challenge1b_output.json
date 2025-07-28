@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "input_documents": ["<pdf1.pdf>", "<pdf2.pdf>"],
+    "persona": "<role>",
+    "job_to_be_done": "<task>",
+    "processing_timestamp": "<timestamp>"
+  },
+  "extracted_sections": [
+    {
+      "document": "<pdf1.pdf>",
+      "section_title": "<section>",
+      "importance_rank": 1,
+      "page_number": 1
+    }
+  ],
+  "subsection_analysis": [
+    {
+      "document": "<pdf1.pdf>",
+      "refined_text": "<summary>",
+      "page_number": 1
+    }
+  ]
+}

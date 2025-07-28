@@ -1,0 +1,53 @@
+{
+    "metadata": {
+        "input_documents": [
+            "South of France - Cities.pdf",
+            "South of France - Cuisine.pdf",
+            "South of France - History.pdf",
+            "South of France - Restaurants and Hotels.pdf",
+            "South of France - Things to Do.pdf",
+            "South of France - Tips and Tricks.pdf",
+            "South of France - Traditions and Culture.pdf"
+        ],
+        "persona": "Travel Planner",
+        "job_to_be_done": "Plan a trip of 4 days for a group of 10 college friends.",
+        "processing_timestamp": "2025-07-28T19:02:19.632745"
+    },
+    "extracted_sections": [
+        {
+            "document": "South of France - Tips and Tricks.pdf",
+            "section_title": "South of France - Tips and Tricks",
+            "importance_rank": 1,
+            "page_number": 1
+        },
+        {
+            "document": "South of France - Things to Do.pdf",
+            "section_title": "South of France - Things to Do",
+            "importance_rank": 2,
+            "page_number": 1
+        },
+        {
+            "document": "South of France - History.pdf",
+            "section_title": "South of France - History",
+            "importance_rank": 3,
+            "page_number": 1
+        }
+    ],
+    "subsection_analysis": [
+        {
+            "document": "South of France - Tips and Tricks.pdf",
+            "refined_text": "Whether you're traveling solo, with kids, or in a group, this guide will help you make the most of your trip. Conclusion Packing for a trip to the South of France involves considering the season, planned activities, and the needs of both adults and children.",
+            "page_number": 1
+        },
+        {
+            "document": "South of France - Things to Do.pdf",
+            "refined_text": "Use this guide to plan your trip and make the most of everything this beautiful region has to offer. This guide will take you through a variety of activities and must-see attractions to help you plan an unforgettable trip.",
+            "page_number": 1
+        },
+        {
+            "document": "South of France - History.pdf",
+            "refined_text": "This guide will take you through the histories of major cities, famous historical sites, and other points of interest to help you plan an enriching and unforgettable trip.",
+            "page_number": 1
+        }
+    ]
+}
